@@ -6,6 +6,7 @@ require 'jbreaker/template'
 require 'jbreaker/json_schema/dsl'
 require 'jbreaker/json_schema/operator'
 
+# :nodoc:
 module Jbreaker
   module_function
 
@@ -19,9 +20,7 @@ module Jbreaker
     @registry = {}
   end
 
-  def define(view_context, &block)
-    view_path = view_context.view_path
-
+  def define(view_path, &block)
     registry[view_path] || Class.new(Jbreaker::Template, &block).tap do |new_klass|
       new_klass.view_path = view_path
       registry[view_path] = new_klass
@@ -34,3 +33,5 @@ module Jbreaker
     raise MissingDefinition, e
   end
 end
+
+require 'jbuilder/railtie' if defined?(Rails)

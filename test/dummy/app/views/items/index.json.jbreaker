@@ -1,4 +1,4 @@
-Jbreaker.define(self) do
+Jbreaker.define('/items/index.json.jbuilder') do
   def render
     json.array! @items do |item|
       json.id item.id

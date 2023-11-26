@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'jbuilder'
+require 'jbuilder/jbuilder_template'
+
 module Jbreaker
   # Base class for everything defined by Jbreaker.define()
   class Template
@@ -7,15 +10,19 @@ module Jbreaker
 
     class_attribute :view_path
 
-    attr_reader :json
-
     def initialize(view_context)
       @view_context = view_context
       @view_context.assigns.each do |var_name, value|
         instance_variable_set("@#{var_name}", value)
       end
+    end
 
-      @json = JbuilderTemplate.new(view_context)
+    def json
+      @json ||= JbuilderTemplate.new(@view_context)
+    end
+
+    def target!
+      @json.target!
     end
 
     def self.t

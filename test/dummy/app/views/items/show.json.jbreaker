@@ -1,4 +1,4 @@
-Jbreaker.define(self) do
+Jbreaker.define('/items/show.json.jbuilder') do
   def render
     json.id @item.id
     json.description simple_format(@item.description)
