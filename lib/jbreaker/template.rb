@@ -2,6 +2,7 @@
 
 require 'jbuilder'
 require 'jbuilder/jbuilder_template'
+require 'json-schema'
 
 module Jbreaker
   # Base class for everything defined by Jbreaker.define()
@@ -27,6 +28,18 @@ module Jbreaker
 
     def self.t
       @t ||= Jbreaker::JsonSchema::Dsl.new
+    end
+
+    def self.validate!(json)
+      return unless respond_to?(:schema)
+
+      schema_hash = schema.with_indifferent_access
+
+      unless schema_hash['type']
+        raise TypeError, "JSON Schema does not have 'type' property on root. Did you forget to define?"
+      end
+
+      JSON::Validator.validate!(schema_hash, json, parse_data: true)
     end
   end
 end

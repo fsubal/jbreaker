@@ -8,9 +8,14 @@ require 'jbreaker/json_schema/operator'
 
 # :nodoc:
 module Jbreaker
+  class MissingDefinition < StandardError; end
+
   module_function
 
-  class MissingDefinition < StandardError; end
+  # TODO: thread_mattr_accessor :validate_json_schema_on_render, default: false
+  def validate_json_schema_on_render
+    true
+  end
 
   def registry
     @registry ||= {}

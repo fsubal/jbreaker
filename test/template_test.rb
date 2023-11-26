@@ -4,14 +4,35 @@ require 'test_helper'
 require 'action_view/testing/resolvers'
 
 class TemplateTest < ActiveSupport::TestCase
+  setup do
+    Item.create!(description: 'hello world!')
+  end
+
+  teardown { Jbreaker.clear_registry! }
+
   TEMPLATE_SHOW = <<~RUBY
     Jbreaker.define('/items/show.json.jbreaker') do
       def render
         json.id @item.id
         json.description simple_format(@item.description)
       end
+
+      def self.schema
+        t.object({
+          id: t.number,
+          description: t.string
+        })
+      end
     end
   RUBY
+
+  test 'it renders json (show.json)' do
+    context = view_context(assigns: { item: Item.last })
+    expected = { id: 1, description: '<p>hello world!</p>' }.to_json
+    actual = context.render(template: 'items/show')
+
+    assert_equal expected, actual
+  end
 
   TEMPLATE_PARTIAL = <<~RUBY
     Jbreaker.define('/items/_item.json.jbreaker') do
@@ -21,19 +42,6 @@ class TemplateTest < ActiveSupport::TestCase
       end
     end
   RUBY
-
-  setup do
-    Item.create!(description: 'hello world!')
-  end
-
-  teardown { Jbreaker.clear_registry! }
-
-  test 'it renders json (show.json)' do
-    context = view_context(assigns: { item: Item.last })
-    expected = { id: 1, description: '<p>hello world!</p>' }.to_json
-
-    assert_equal expected, context.render(template: 'items/show')
-  end
 
   test 'it renders json (partial)' do
     expected = { id: 1, description: '<p>hello world!</p>' }.to_json

@@ -26,7 +26,9 @@ Gem::Specification.new do |spec|
     Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   end
 
+  spec.add_dependency 'activesupport', '>= 5.0.0'
   spec.add_dependency 'jbuilder', '>= 2.0.0'
+  spec.add_dependency 'json-schema', '>= 4.0.0'
   spec.add_dependency 'rails', '>= 5.0.0' # same as jbuilder https://github.com/rails/jbuilder/blob/d2161bdc53675c578b8545a8835b0c79b675504c/jbuilder.gemspec#L12-L13
 
   spec.add_development_dependency 'rubocop', '1.24.0'
