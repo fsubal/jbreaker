@@ -1,11 +1,7 @@
-require "test_helper"
+require 'test_helper'
 
 class JbreakerTest < ActiveSupport::TestCase
-  test "it has a version number" do
-    assert Jbreaker::VERSION
-  end
-
-  test "it defines a class and caches" do
+  setup do
     # TODO: Use actual ActionView context class
     view_context_klass = Class.new do
       def view_path
@@ -18,11 +14,23 @@ class JbreakerTest < ActiveSupport::TestCase
     Jbreaker.define(view_context) do
       def render
         json.id 1
-        json.name "John Doe"
+        json.name 'John Doe'
+      end
+
+      def self.schema
+        {}
       end
     end
+  end
 
-    assert_operator Jbreaker.resolve_class('shops/shop'), '<', Jbreaker::Template
-    assert_same Jbreaker.resolve_class('shops/shop'), Jbreaker.resolve_class('shops/shop'), "does not define twice"
+  teardown { Jbreaker.clear_registry! }
+
+  test 'it defines a class and caches' do
+    subject = Jbreaker.resolve_class('shops/shop')
+
+    assert_operator subject, '<', Jbreaker::Template
+    assert_same subject, Jbreaker.resolve_class('shops/shop'), 'does not define twice'
+    assert subject.method_defined? :render
+    assert subject.respond_to? :schema
   end
 end

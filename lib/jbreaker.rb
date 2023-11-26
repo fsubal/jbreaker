@@ -1,10 +1,12 @@
-require "jbreaker/version"
-require "jbreaker/railtie"
-require "jbreaker/template"
-require "jbreaker/json_schema/dsl"
+# frozen_string_literal: true
+
+require 'jbreaker/version'
+require 'jbreaker/railtie'
+require 'jbreaker/template'
+require 'jbreaker/json_schema/dsl'
 
 module Jbreaker
-  extend self
+  module_function
 
   class MissingDefinition < StandardError; end
 
@@ -12,10 +14,14 @@ module Jbreaker
     @registry ||= {}
   end
 
+  def clear_registry!
+    @registry = {}
+  end
+
   def define(view_context, &block)
     view_path = view_context.view_path
 
-    klass = registry[view_path] || Class.new(Jbreaker::Template, &block).tap do |new_klass|
+    registry[view_path] || Class.new(Jbreaker::Template, &block).tap do |new_klass|
       registry[view_path] = new_klass
     end
   end

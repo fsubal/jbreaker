@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 module Jbreaker
+  # Base class for everything defined by Jbreaker.define()
   class Template
     delegate_missing_to :@view_context
 
