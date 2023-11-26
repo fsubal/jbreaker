@@ -35,8 +35,9 @@ module Jbreaker
 
       schema_hash = schema.with_indifferent_access
 
-      unless schema_hash['type']
-        raise TypeError, "JSON Schema does not have 'type' property on root. Did you forget to define?"
+      unless schema_hash['type'] || schema_hash['anyOf'] || schema_hash['allOf'] || schema_hash['oneOf']
+        raise TypeError,
+              "JSON Schema must have 'type', 'anyOf', 'allOf' or 'oneOf' property on root. Did you forget to define?"
       end
 
       JSON::Validator.validate!(schema_hash, json, parse_data: true)
