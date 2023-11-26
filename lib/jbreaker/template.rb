@@ -5,6 +5,8 @@ module Jbreaker
   class Template
     delegate_missing_to :@view_context
 
+    class_attribute :view_path
+
     attr_reader :json
 
     def initialize(view_context)

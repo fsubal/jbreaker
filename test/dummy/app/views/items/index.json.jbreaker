@@ -1,0 +1,19 @@
+Jbreaker.define(self) do
+  def render
+    json.array! @items do |item|
+      json.id item.id
+      json.description simple_format(item.description)
+    end
+  end
+
+  def self.schema
+    t.array(
+      t.object(
+        {
+          id: t.number,
+          description: t.string
+        }
+      )
+    )
+  end
+end

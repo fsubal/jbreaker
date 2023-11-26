@@ -23,6 +23,7 @@ module Jbreaker
     view_path = view_context.view_path
 
     registry[view_path] || Class.new(Jbreaker::Template, &block).tap do |new_klass|
+      new_klass.view_path = view_path
       registry[view_path] = new_klass
     end
   end
