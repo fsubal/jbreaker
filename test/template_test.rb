@@ -4,11 +4,20 @@ require 'test_helper'
 require 'action_view/testing/resolvers'
 
 class TemplateTest < ActiveSupport::TestCase
-  TEMPLATE = <<~RUBY
-    Jbreaker.define('/items/item.json.jbreaker') do
+  TEMPLATE_SHOW = <<~RUBY
+    Jbreaker.define('/items/show.json.jbreaker') do
       def render
         json.id @item.id
         json.description simple_format(@item.description)
+      end
+    end
+  RUBY
+
+  TEMPLATE_PARTIAL = <<~RUBY
+    Jbreaker.define('/items/_item.json.jbreaker') do
+      def render(item:)
+        json.id item.id
+        json.description simple_format(item.description)
       end
     end
   RUBY
@@ -19,18 +28,26 @@ class TemplateTest < ActiveSupport::TestCase
 
   teardown { Jbreaker.clear_registry! }
 
-  test 'it renders json' do
-    item = Item.last
-    context = view_context(assigns: { item: item })
+  test 'it renders json (show.json)' do
+    context = view_context(assigns: { item: Item.last })
     expected = { id: 1, description: '<p>hello world!</p>' }.to_json
 
-    assert_equal expected, context.render(template: 'items/item')
+    assert_equal expected, context.render(template: 'items/show')
+  end
+
+  test 'it renders json (partial)' do
+    expected = { id: 1, description: '<p>hello world!</p>' }.to_json
+
+    assert_equal expected, view_context.render(template: 'items/_item', locals: { item: Item.last })
   end
 
   private
 
-  def view_context(assigns:)
-    resolver = ActionView::FixtureResolver.new('items/item.json.jbreaker' => TEMPLATE)
+  def view_context(assigns: {})
+    resolver = ActionView::FixtureResolver.new(
+      'items/show.json.jbreaker' => TEMPLATE_SHOW,
+      'items/_item.json.jbreaker' => TEMPLATE_PARTIAL
+    )
     lookup_context = ActionView::LookupContext.new([resolver], {}, [''])
     controller = ActionView::TestCase::TestController.new
 

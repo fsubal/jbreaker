@@ -13,7 +13,7 @@ module Jbreaker
       "#{source};" \
       "klass = Jbreaker.resolve_class('#{template.identifier}');" \
       'template = klass.new(self);' \
-      'template.render;' \
+      'template.render(**local_assigns);' \
       'template.target!;'
     end
 
