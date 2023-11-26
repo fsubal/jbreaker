@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
-class JbreakerTest < ActiveSupport::TestCase
+class DefineTest < ActiveSupport::TestCase
   setup do
     # TODO: Use actual ActionView context class
     view_context_klass = Class.new do

@@ -23,7 +23,15 @@ class DslTest < ActiveSupport::TestCase
       tags: {
         type: :array,
         items: {
-          type: :string
+          anyOf: [
+            { type: :string },
+            {
+              type: :object,
+              properties: {
+                name: { type: :string }
+              }
+            }
+          ]
         }
       }
     }), {
@@ -32,7 +40,7 @@ class DslTest < ActiveSupport::TestCase
       description: t.string | t.null,
       is_public: t.boolean,
       shop: t.object({ id: t.number }),
-      tags: t.array(t.string)
+      tags: t.array(t.string | t.object({ name: t.string }))
     }
   end
   # rubocop:enable Metrics/BlockLength
