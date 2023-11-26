@@ -4,6 +4,7 @@ require 'jbreaker/version'
 require 'jbreaker/railtie'
 require 'jbreaker/template'
 require 'jbreaker/json_schema/dsl'
+require 'jbreaker/json_schema/operator'
 
 module Jbreaker
   module_function

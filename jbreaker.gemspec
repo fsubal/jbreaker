@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'lib/jbreaker/version'
 
 Gem::Specification.new do |spec|
@@ -9,6 +11,8 @@ Gem::Specification.new do |spec|
   spec.summary     = 'Write jbuilder and JSON Schema in the same one file.'
   spec.description = 'Write jbuilder and JSON Schema in the same one file.'
   spec.license     = 'MIT'
+
+  spec.required_ruby_version = Gem::Requirement.new('>= 2.5.0')
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the "allowed_push_host"
   # to allow pushing to a single host or delete this section to allow pushing to any host.
