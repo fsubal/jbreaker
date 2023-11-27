@@ -18,7 +18,8 @@ class DslTest < ActiveSupport::TestCase
         type: :object,
         properties: {
           id: { type: :number }
-        }
+        },
+        required: [:id]
       },
       tags: {
         type: :array,
@@ -29,7 +30,8 @@ class DslTest < ActiveSupport::TestCase
               type: :object,
               properties: {
                 name: { type: :string }
-              }
+              },
+              required: [:name]
             }
           ]
         }

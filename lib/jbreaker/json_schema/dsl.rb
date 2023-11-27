@@ -37,11 +37,23 @@ module Jbreaker
       def object(properties, **options)
         raise TypeError unless properties.is_a? Hash
 
-        { type: :object, properties: properties, **options }
+        { type: :object, properties: properties, required: infer_required_keys(properties), **options }
       end
 
       def object?(properties, **options)
         object(properties, optional: true, **options)
+      end
+
+      private
+
+      def infer_required_keys(object)
+        object.filter_map do |key, value|
+          if value[:optional]
+            nil
+          else
+            key
+          end
+        end
       end
     end
   end
