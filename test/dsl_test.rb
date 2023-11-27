@@ -3,8 +3,6 @@
 require 'test_helper'
 
 class DslTest < ActiveSupport::TestCase
-  using Jbreaker::JsonSchema::Operator
-
   # rubocop:disable Metrics/BlockLength
   test 'it defines a JSON Schema' do
     t = Jbreaker::JsonSchema::Dsl.new
@@ -39,10 +37,10 @@ class DslTest < ActiveSupport::TestCase
     }), {
       id: t.number,
       name: t.string?,
-      description: t.string | t.null,
+      description: t.union(t.string, t.null),
       is_public: t.boolean,
       shop: t.object({ id: t.number }),
-      tags: t.array(t.string | t.object({ name: t.string }))
+      tags: t.array(t.union(t.string, t.object({ name: t.string })))
     }
   end
   # rubocop:enable Metrics/BlockLength

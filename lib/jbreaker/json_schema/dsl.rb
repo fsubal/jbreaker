@@ -44,6 +44,26 @@ module Jbreaker
         object(properties, optional: true, **options)
       end
 
+      def all_of(*types, **options)
+        { allOf: types, **options }
+      end
+
+      alias intersection all_of
+
+      def any_of(*types, **options)
+        { anyOf: types, **options }
+      end
+
+      alias union any_of
+
+      def one_of(*types, **options)
+        { oneOf: types, **options }
+      end
+
+      def enum(*values)
+        { enum: values }
+      end
+
       private
 
       def infer_required_keys(object)
