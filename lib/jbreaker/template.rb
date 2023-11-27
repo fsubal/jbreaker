@@ -23,7 +23,9 @@ module Jbreaker
     end
 
     def target!
-      @json.target!
+      @json.target!.tap do |result|
+        self.class.validate!(result) if Jbreaker.validate_json_schema_on_render
+      end
     end
 
     def self.t

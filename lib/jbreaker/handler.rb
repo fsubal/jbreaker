@@ -14,9 +14,7 @@ module Jbreaker
       "klass = Jbreaker.resolve_class('#{template.identifier}');" \
       'template = klass.new(self);' \
       'template.render(**local_assigns);' \
-      'result = template.target!;' \
-      'klass.validate!(result) if Jbreaker.validate_json_schema_on_render;' \
-      'result;'
+      'template.target!;'
     end
 
     def self.handles_encoding?
