@@ -11,18 +11,16 @@ class TemplateTest < ActiveSupport::TestCase
   teardown { Jbreaker.clear_registry! }
 
   TEMPLATE_SHOW = <<~RUBY
-    Jbreaker.define('/items/show.json.jbreaker') do
-      def render
-        json.id @item.id
-        json.description simple_format(@item.description)
-      end
+    def render
+      json.id @item.id
+      json.description simple_format(@item.description)
+    end
 
-      def self.schema
-        t.object({
-          id: t.number,
-          description: t.string
-        })
-      end
+    def self.schema
+      t.object({
+        id: t.number,
+        description: t.string
+      })
     end
   RUBY
 
@@ -35,11 +33,9 @@ class TemplateTest < ActiveSupport::TestCase
   end
 
   TEMPLATE_PARTIAL = <<~RUBY
-    Jbreaker.define('/items/_item.json.jbreaker') do
-      def render(item:)
-        json.id item.id
-        json.description simple_format(item.description)
-      end
+    def render(item:)
+      json.id item.id
+      json.description simple_format(item.description)
     end
   RUBY
 

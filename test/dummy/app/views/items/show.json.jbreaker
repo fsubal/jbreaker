@@ -1,15 +1,13 @@
-Jbreaker.define('/items/show.json.jbuilder') do
-  def render
-    json.id @item.id
-    json.description simple_format(@item.description)
-  end
+def render
+  json.id @item.id
+  json.description simple_format(@item.description)
+end
 
-  def self.schema
-    t.object(
-      {
-        id: t.number,
-        description: t.string
-      }
-    )
-  end
+def self.schema
+  t.object(
+    {
+      id: t.number,
+      description: t.string
+    }
+  )
 end

@@ -10,8 +10,9 @@ module Jbreaker
     def self.call(template, source = nil)
       source ||= template.source
 
+      "klass = Jbreaker.define('#{template.identifier}') do;" \
       "#{source};" \
-      "klass = Jbreaker.resolve_class('#{template.identifier}');" \
+      'end;' \
       'template = klass.new(self);' \
       'template.render(**local_assigns);' \
       'template.target!;'

@@ -18,14 +18,12 @@ end
 You can migrate it like following.
 
 ```ruby
-Jbreaker.define('/items/item.json.jbuilder') do
-  def render(shop:)
-    json.id @item.id
-    json.description simple_format(@item.description)
+def render(shop:)
+  json.id @item.id
+  json.description simple_format(@item.description)
 
-    json.shop do
-      json.partial! 'shops/shop', locals: { shop: shop }
-    end
+  json.shop do
+    json.partial! 'shops/shop', locals: { shop: shop }
   end
 end
 ```
@@ -33,23 +31,21 @@ end
 And you can have the corresponding JSON Schema in the same file.
 
 ```ruby
-Jbreaker.define('/items/item.json.jbuilder') do
-  def render(shop:)
-    json.id @item.id
-    json.description simple_format(@item.description)
+def render(shop:)
+  json.id @item.id
+  json.description simple_format(@item.description)
 
-    json.shop do
-      json.partial! 'shops/shop', locals: { shop: shop }
-    end
+  json.shop do
+    json.partial! 'shops/shop', locals: { shop: shop }
   end
+end
 
-  def self.schema
-    {
-      id: { type: 'number' },
-      description: { type: 'string', nullable: true },
-      shop: { '$ref': t.partial_to_ref('shops/shop') },
-    }
-  end
+def self.schema
+  {
+    id: { type: 'number' },
+    description: { type: 'string', nullable: true },
+    shop: { '$ref': t.partial_to_ref('shops/shop') },
+  }
 end
 ```
 
