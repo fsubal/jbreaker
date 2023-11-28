@@ -28,7 +28,6 @@ module Jbreaker
 
   def find_or_define(view_path, &block)
     registry[view_path] || define(&block).tap do |new_klass|
-      new_klass.view_path = view_path
       registry[view_path] = new_klass
     end
   end

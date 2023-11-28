@@ -9,8 +9,6 @@ module Jbreaker
   class Template
     delegate_missing_to :@view_context
 
-    class_attribute :view_path
-
     def initialize(view_context)
       @view_context = view_context
       @view_context.assigns.each do |var_name, value|
