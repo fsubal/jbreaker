@@ -10,7 +10,7 @@ module Jbreaker
     def self.call(template, source = nil)
       source ||= template.source
 
-      "klass = Jbreaker.define('#{template.identifier}') do;" \
+      "klass = Jbreaker.find_or_define('#{template.identifier}') do;" \
       "#{source};" \
       'end;' \
       'template = klass.new(self);' \

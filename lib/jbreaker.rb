@@ -7,8 +7,6 @@ require 'jbreaker/json_schema/dsl'
 
 # :nodoc:
 module Jbreaker
-  class MissingDefinition < StandardError; end
-
   module_function
 
   # TODO: thread_mattr_accessor :validate_json_schema_on_render, default: false
@@ -24,17 +22,15 @@ module Jbreaker
     @registry = {}
   end
 
-  def define(view_path, &block)
-    registry[view_path] || Class.new(Jbreaker::Template, &block).tap do |new_klass|
+  def define(&block)
+    Class.new(Jbreaker::Template, &block)
+  end
+
+  def find_or_define(view_path, &block)
+    registry[view_path] || define(&block).tap do |new_klass|
       new_klass.view_path = view_path
       registry[view_path] = new_klass
     end
-  end
-
-  def resolve_class(view_path)
-    registry.fetch(view_path)
-  rescue KeyError => e
-    raise MissingDefinition, e
   end
 end
 

@@ -3,27 +3,25 @@
 require 'test_helper'
 
 class DefineTest < ActiveSupport::TestCase
-  setup do
-    Jbreaker.define('/items/item.json.jbreaker') do
-      def render
-        json.id @item.id
-        json.description simple_format(@item.description)
-      end
-
-      def self.schema
-        {}
-      end
-    end
-  end
-
   teardown { Jbreaker.clear_registry! }
 
   test 'it defines a class and caches' do
-    subject = Jbreaker.resolve_class('/items/item.json.jbreaker')
+    subject = lambda do
+      Jbreaker.find_or_define('/items/item.json.jbreaker') do
+        def render
+          json.id @item.id
+          json.description simple_format(@item.description)
+        end
 
-    assert_operator subject, '<', Jbreaker::Template
-    assert_same subject, Jbreaker.resolve_class('/items/item.json.jbreaker'), 'does not define twice'
-    assert subject.method_defined? :render
-    assert subject.respond_to? :schema
+        def self.schema
+          {}
+        end
+      end
+    end
+
+    assert_operator subject.call, '<', Jbreaker::Template
+    assert_same subject.call, subject.call, 'does not define twice'
+    assert subject.call.method_defined? :render
+    assert subject.call.respond_to? :schema
   end
 end
