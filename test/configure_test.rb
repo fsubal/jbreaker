@@ -3,7 +3,7 @@
 require 'test_helper'
 
 class ConfigureTest < ActiveSupport::TestCase
-  Klass = Jbreaker.define do
+  KlassWithWrongSchema = Jbreaker.define do
     def render
       json.id 1
     end
@@ -23,12 +23,12 @@ class ConfigureTest < ActiveSupport::TestCase
     end
   end
 
-  test 'should raise' do
+  test 'given wrong schema, should raise (validate_json_schema_on_render = true)' do
     Jbreaker.configure do |config|
       config.validate_json_schema_on_render = true
     end
 
-    template = Klass.new(view_context)
+    template = KlassWithWrongSchema.new(view_context)
 
     assert_raises JSON::Schema::ValidationError do
       template.render
@@ -36,12 +36,12 @@ class ConfigureTest < ActiveSupport::TestCase
     end
   end
 
-  test 'should not raise' do
+  test 'given wrong schema, should not raise (validate_json_schema_on_render = false)' do
     Jbreaker.configure do |config|
       config.validate_json_schema_on_render = false
     end
 
-    template = Klass.new(view_context)
+    template = KlassWithWrongSchema.new(view_context)
     template.render
 
     assert_equal({ id: 1 }.to_json, template.target!)
