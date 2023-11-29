@@ -8,7 +8,7 @@ Given the following jbuilder,
 
 ```ruby
 json.id @item.id
-json.description simple_format(@item.description)
+json.description @item.description ? simple_format(@item.description) : nil
 
 json.shop do
   json.partial! 'shops/shop', locals: { shop: shop }
@@ -20,7 +20,7 @@ You can migrate it like following.
 ```ruby
 def render(shop:)
   json.id @item.id
-  json.description simple_format(@item.description)
+  json.description @item.description ? simple_format(@item.description) : nil
 
   json.shop do
     json.partial! 'shops/shop', locals: { shop: shop }
@@ -33,7 +33,7 @@ And you can have the corresponding JSON Schema in the same file.
 ```ruby
 def render(shop:)
   json.id @item.id
-  json.description simple_format(@item.description)
+  json.description @item.description ? simple_format(@item.description) : nil
 
   json.shop do
     json.partial! 'shops/shop', locals: { shop: shop }
@@ -41,11 +41,11 @@ def render(shop:)
 end
 
 def self.schema
-  {
-    id: { type: 'number' },
-    description: { type: 'string', nullable: true },
-    shop: { '$ref': t.partial_to_ref('shops/shop') },
-  }
+  t.object({
+    id: t.number,
+    description: t.string(nullable: true),
+    shop: t.ref('shops/shop'),
+  })
 end
 ```
 
