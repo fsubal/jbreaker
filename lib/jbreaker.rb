@@ -7,12 +7,11 @@ require 'jbreaker/json_schema/dsl'
 
 # :nodoc:
 module Jbreaker
-  module_function
+  include ActiveSupport::Configurable
 
-  # TODO: thread_mattr_accessor :validate_json_schema_on_render, default: false
-  def validate_json_schema_on_render
-    true
-  end
+  config_accessor :validate_json_schema_on_render, default: false
+
+  module_function
 
   def registry
     @registry ||= {}
