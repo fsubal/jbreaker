@@ -31,7 +31,7 @@ module Jbreaker
       end
 
       def ref?(partial_path)
-        ref(optional: true)
+        ref(partial_path, optional: true)
       end
 
       def array(items, **options)
