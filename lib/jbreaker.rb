@@ -10,6 +10,7 @@ module Jbreaker
   include ActiveSupport::Configurable
 
   config_accessor :validate_json_schema_on_render, default: false
+  config_accessor :inline_ref, default: false
 
   module_function
 
