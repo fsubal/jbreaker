@@ -4,6 +4,8 @@ module Jbreaker
   module JsonSchema
     # Shorthand for defining JSON Schema in Ruby
     class Dsl
+      attr_reader :component_definitions
+
       def initialize(inline_ref: false)
         @component_definitions = {}
         @inline_ref = inline_ref
