@@ -17,11 +17,11 @@ module Jbreaker
       end
 
       def ref(partial_path)
-        { '$ref': partial_path }
+        Ref.new(partial_path)
       end
 
       def ref?(partial_path)
-        { '$ref': partial_path, optional: true }
+        Ref.new(partial_path, optional: true)
       end
 
       def array(items, **options)

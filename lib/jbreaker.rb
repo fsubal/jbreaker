@@ -25,6 +25,13 @@ module Jbreaker
     Class.new(Jbreaker::Template, &block)
   end
 
+  def require(view_path)
+    registry[view_path] || File.read(view_path).then do |content|
+      new_klass = Class.new(Jbreaker::Template).class_eval(content)
+      registry[view_path] = new_klass
+    end
+  end
+
   def find_or_define(view_path, &block)
     registry[view_path] || define(&block).tap do |new_klass|
       registry[view_path] = new_klass
