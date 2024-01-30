@@ -26,12 +26,15 @@ module Jbreaker
       end
     end
 
+    # TODO: 1回の self.schema 呼び出しごとに1インスタンスにしないといけない
+    def self.t
+      @t ||= Jbreaker::JsonSchema::Dsl.new(inline_ref: Jbreaker.inline_ref)
+    end
+
     def self.validate!(json)
       return unless respond_to?(:schema)
 
-      t = Jbreaker::JsonSchema::Dsl.new(inline_ref: Jbreaker.inline_ref)
-
-      schema_hash = schema(t).with_indifferent_access
+      schema_hash = schema.with_indifferent_access
 
       unless schema_hash['type'] || schema_hash['anyOf'] || schema_hash['allOf'] || schema_hash['oneOf']
         raise TypeError,
