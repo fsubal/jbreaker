@@ -4,7 +4,12 @@ module Jbreaker
   module JsonSchema
     # Shorthand for defining JSON Schema in Ruby
     class Dsl
-      def initialize; end
+      attr_reader :component_definitions
+
+      def initialize(inline_ref: false)
+        @component_definitions = {}
+        @inline_ref = inline_ref
+      end
 
       %i[number string boolean null].each do |primitive|
         define_method primitive do |**options|
@@ -16,12 +21,17 @@ module Jbreaker
         end
       end
 
-      def ref(partial_path)
-        Ref.new(partial_path)
+      def ref(partial_path, optional: false)
+        Ref.new(partial_path, optional:).then do |ref|
+          return ref.schema if @inline_ref
+
+          @component_definitions.merge!(ref.to_definition)
+          ref.to_reference
+        end
       end
 
       def ref?(partial_path)
-        Ref.new(partial_path, optional: true)
+        ref(partial_path, optional: true)
       end
 
       def array(items, **options)
