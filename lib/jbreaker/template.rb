@@ -9,6 +9,8 @@ module Jbreaker
   class Template
     delegate_missing_to :@view_context
 
+    class_attribute :dsl
+
     def initialize(view_context)
       @view_context = view_context
       @view_context.assigns.each do |var_name, value|
@@ -26,9 +28,8 @@ module Jbreaker
       end
     end
 
-    # TODO: 1回の self.schema 呼び出しごとに1インスタンスにしないといけない
     def self.t
-      @t ||= Jbreaker::JsonSchema::Dsl.new(inline_ref: Jbreaker.inline_ref)
+      self.dsl ||= Jbreaker::JsonSchema::Dsl.new(inline_ref: Jbreaker.inline_ref)
     end
 
     def self.validate!(json)
